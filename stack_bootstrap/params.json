@@ -1,0 +1,19 @@
+[
+    {
+      "ParameterKey": "CodeBucketName",
+      "ParameterValue": "test-glue-code-ybi779"
+    },
+    {
+      "ParameterKey": "SourceDataBucketName",
+      "ParameterValue": "test-data-zuu553"
+    },
+    {
+      "ParameterKey": "GlueDatabaseName",
+      "ParameterValue": "datasource"
+    },
+    {
+      "ParameterKey": "Region",
+      "ParameterValue": "us-east-1"
+    }
+  ]
+  

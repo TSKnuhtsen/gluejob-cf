@@ -1,0 +1,39 @@
+[
+    {
+      "ParameterKey": "BucketName",
+      "ParameterValue": "test-data-lake-ftg321"
+    },
+    {
+      "ParameterKey": "Region",
+      "ParameterValue": "us-east-1"
+    },
+    {
+      "ParameterKey": "GlueJobName",
+      "ParameterValue": "test-glue-job-gh45y1"
+    },
+    {
+      "ParameterKey": "GlueJobScriptLocation",
+      "ParameterValue": "s3://test-glue-code-ybi779/code/main.py"
+    },
+    {
+      "ParameterKey": "GlueJobDPUs",
+      "ParameterValue": "50"
+    },
+    {
+      "ParameterKey": "GlueBucketName",
+      "ParameterValue": "test-glue-job-runs-data-zum331i"
+    },
+    {
+      "ParameterKey": "Database",
+      "ParameterValue": "datasource"
+    },
+    {
+      "ParameterKey": "Table",
+      "ParameterValue": "customer"
+    },
+    {
+      "ParameterKey": "PathPrefix",
+      "ParameterValue": "customer_info2/"
+    }
+  ]
+  

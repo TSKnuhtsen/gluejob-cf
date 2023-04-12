@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Glue Job and deps CF template
+
+Parameters:
+  BucketName:
+    Description: Name of the S3 bucket
+    Type: String
+  GlueBucketName:
+    Description: Name of the S3 bucket
+    Type: String
+  GlueJobName:
+    Type: String
+    Description: The name of the Glue Job
+  GlueJobScriptLocation:
+    Type: String
+    Description: The location of the Glue Job script in S3
+  GlueJobDPUs:
+    Type: Number
+    Description: The number of DPUs to allocate for the Glue Job
+    Default: 50
+  Database:
+    Type: String
+    Description: glue catalog db
+  Table:
+    Type: String
+    Description: glue catalog table
+  PathPrefix:
+    Type: String
+    Description: s3 output path prefix
+  Region:
+    Description: AWS region for the S3 bucket
+    Type: String
+    Default: us-east-1
+    AllowedValues:
+      - us-east-1
+      - us-east-2
+      - us-west-1
+      - us-west-2
+      - eu-central-1
+      - eu-west-1
+      - eu-west-2
+      - eu-west-3
+      - eu-north-1
+
+Resources:
+  TestOutput:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      AccessControl: Private
+  GlueJobBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref GlueBucketName
+      AccessControl: Private
+  GlueServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: 'GlueServiceRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              Service:
+                - 'glue.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Path: '/'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole'
+        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+  TestGlueJob:
+    Type: "AWS::Glue::Job"
+    Properties:
+      Name: !Ref GlueJobName
+      Role: !GetAtt GlueServiceRole.Arn
+      GlueVersion: "3.0"
+      Command:
+        Name: "glueetl"
+        ScriptLocation: !Ref GlueJobScriptLocation
+      DefaultArguments:
+        '--job-language': 'python'
+        '--job-bookmark-option': 'job-bookmark-disable'
+        '--enable-glue-datacatalog': 'true'
+        '--enable-metrics': 'true'
+        '--enable-continuous-cloudwatch-log': 'true'
+        '--enable-job-insights': 'true'
+        '--enable-auto-scaling': 'true'
+        '--enable-spark-ui': 'true'
+        '--spark-event-logs-path': !Sub 's3://${GlueJobBucket}/sparkHistoryLogs/'
+        '--TempDir': !Sub 's3://${GlueJobBucket}/temporary/'
+        '--region': !Ref Region
+        '--database': !Ref Database
+        '--table': !Ref Table
+        '--bucket': !Ref BucketName
+        '--pathprefix': !Ref PathPrefix
+      MaxRetries: 0
+      Timeout: 2880
+      WorkerType: "G.1X"
+      NumberOfWorkers: !Ref GlueJobDPUs # DPU
+      ExecutionProperty:
+        MaxConcurrentRuns: 1 
+Outputs:
+  BucketName:
+    Description: Name of test S3 bucket
+    Value: !Ref TestOutput

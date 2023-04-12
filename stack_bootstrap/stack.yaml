@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Glue Job Code CF template
+
+Parameters:
+  CodeBucketName:
+    Description: Name of the Code S3 bucket
+    Type: String
+  SourceDataBucketName:
+    Description: Name of the Source Data S3 bucket
+    Type: String
+  GlueDatabaseName:
+    Description: Name of the AWS Glue Database
+    Type: String
+  Region:
+    Description: AWS region for the S3 bucket
+    Type: String
+    Default: us-east-1
+    AllowedValues:
+      - us-east-1
+      - us-east-2
+      - us-west-1
+      - us-west-2
+      - eu-central-1
+      - eu-west-1
+      - eu-west-2
+      - eu-west-3
+      - eu-north-1
+
+Resources:
+  CodeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref CodeBucketName
+      AccessControl: Private
+  SourceDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref SourceDataBucketName
+      AccessControl: Private
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: !Ref GlueDatabaseName
+        Description: 'Test Glue Database created by CloudFormation'
+Outputs:
+  CodeBucketName:
+    Description: Name of S3 code bucket
+    Value: !Ref CodeBucketName
+  SourceDataBucketName:
+    Description: Name of S3 source data bucket
+    Value: !Ref SourceDataBucketName
