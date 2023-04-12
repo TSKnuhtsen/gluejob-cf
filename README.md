@@ -1,6 +1,6 @@
 # gluejob-cf
 
-# Directory Structure
+## Directory Structure
 
 1. bin - helper utilities written in bash
 * ```bootstrap.sh``` - create bootstrap cf stack based in stack_bootstrap folder
@@ -24,7 +24,7 @@
 * ```main.py``` - source code which reads test parquet data from s3.
 * poetry and pyenv files - python version manager and python dependency manager.
 
-# Local env dependencies
+## Local env dependencies
 
 1. aws cli
 2. jq
@@ -32,7 +32,7 @@
 4. pip 
 5. poetry
 
-# Steps to Create Local Env
+## Steps to Create Local Env
 
 1. ```./bin/bootstrap.sh```
 2. ```cd loader; poetry run python main.py```
